@@ -1,5 +1,5 @@
 /*!
- * @tai-fe/wavesurfer.js 2.2.1-patch.5 (2019-05-07)
+ * wavesurfer.js 3.0.0 (2019-08-01)
  * https://github.com/tai-fe/wavesurfer.js
  * @license BSD-3-Clause
  */
@@ -302,8 +302,8 @@ function () {
     /**
      * Update the dimensions
      *
-     * @param {number} elementWidth
-     * @param {number} totalWidth
+     * @param {number} elementWidth Width of the entry
+     * @param {number} totalWidth Total width of the multi canvas renderer
      * @param {number} width The new width of the element
      * @param {number} height The new height of the element
      */
@@ -372,10 +372,10 @@ function () {
   }, {
     key: "fillRects",
     value: function fillRects(x, y, width, height) {
-      this.fillRectToContext(this.waveCtx);
+      this.fillRectToContext(this.waveCtx, x, y, width, height);
 
       if (this.hasProgressCanvas) {
-        this.fillRectToContext(this.progressCtx);
+        this.fillRectToContext(this.progressCtx, x, y, width, height);
       }
     }
     /**
@@ -720,8 +720,8 @@ function (_util$Observer) {
     /**
      * Draw peaks on the canvas
      *
-     * @param {number[]|number[][]} peaks Can also be an array of arrays for split channel
-     * rendering
+     * @param {number[]|Number.<Array[]>} peaks Can also be an array of arrays
+     * for split channel rendering
      * @param {number} length The width of the area that should be drawn
      * @param {number} start The x-offset of the beginning of the area that
      * should be rendered
@@ -801,7 +801,7 @@ function (_util$Observer) {
     /**
      * Get the current scroll position in pixels
      *
-     * @return {number}
+     * @return {number} Horizontal scroll position in pixels
      */
 
   }, {
@@ -828,7 +828,7 @@ function (_util$Observer) {
     /**
      * Get the width of the container
      *
-     * @return {number}
+     * @return {number} The width of the container
      */
 
   }, {
@@ -839,7 +839,8 @@ function (_util$Observer) {
     /**
      * Set the width of the container
      *
-     * @param {number} width
+     * @param {number} width The new width of the container
+     * @return {boolean} Whether the width of the container was updated or not
      */
 
   }, {
@@ -867,7 +868,8 @@ function (_util$Observer) {
     /**
      * Set the height of the container
      *
-     * @param {number} height
+     * @param {number} height The new height of the container.
+     * @return {boolean} Whether the height of the container was updated or not
      */
 
   }, {
@@ -948,7 +950,7 @@ function (_util$Observer) {
      * Draw a waveform with bars
      *
      * @abstract
-     * @param {number[]|number[][]} peaks Can also be an array of arrays for split channel
+     * @param {number[]|Number.<Array[]>} peaks Can also be an array of arrays for split channel
      * rendering
      * @param {number} channelIndex The index of the current channel. Normally
      * should be 0
@@ -965,7 +967,7 @@ function (_util$Observer) {
      * Draw a waveform
      *
      * @abstract
-     * @param {number[]|number[][]} peaks Can also be an array of arrays for split channel
+     * @param {number[]|Number.<Array[]>} peaks Can also be an array of arrays for split channel
      * rendering
      * @param {number} channelIndex The index of the current channel. Normally
      * should be 0
@@ -1307,14 +1309,15 @@ function (_Drawer) {
     /**
      * Draw a waveform with bars
      *
-     * @param {number[]|number[][]} peaks Can also be an array of arrays for split channel
-     * rendering
+     * @param {number[]|Number.<Array[]>} peaks Can also be an array of arrays
+     * for split channel rendering
      * @param {number} channelIndex The index of the current channel. Normally
      * should be 0. Must be an integer.
      * @param {number} start The x-offset of the beginning of the area that
      * should be rendered
      * @param {number} end The x-offset of the end of the area that should be
      * rendered
+     * @returns {void}
      */
 
   }, {
@@ -1358,14 +1361,15 @@ function (_Drawer) {
     /**
      * Draw a waveform
      *
-     * @param {number[]|number[][]} peaks Can also be an array of arrays for split channel
-     * rendering
+     * @param {number[]|Number.<Array[]>} peaks Can also be an array of arrays
+     * for split channel rendering
      * @param {number} channelIndex The index of the current channel. Normally
      * should be 0
      * @param {number?} start The x-offset of the beginning of the area that
      * should be rendered (If this isn't set only a flat line is rendered)
      * @param {number?} end The x-offset of the end of the area that should be
      * rendered
+     * @returns {void}
      */
 
   }, {
@@ -1408,7 +1412,7 @@ function (_Drawer) {
      * Tell the canvas entries to render their portion of the waveform
      *
      * @private
-     * @param {number[]} peaks Peak data
+     * @param {number[]} peaks Peaks data
      * @param {number} absmax Maximum peak value (absolute)
      * @param {number} halfH Half the height of the waveform
      * @param {number} offsetY Offset to the top
@@ -1432,10 +1436,10 @@ function (_Drawer) {
     /**
      * Draw a rectangle on the multi-canvas
      *
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
+     * @param {number} x X-position of the rectangle
+     * @param {number} y Y-position of the rectangle
+     * @param {number} width Width of the rectangle
+     * @param {number} height Height of the rectangle
      */
 
   }, {
@@ -1466,7 +1470,7 @@ function (_Drawer) {
      * and `drawWave`
      *
      * @private
-     * @param {number[]|number[][]} peaks Can also be an array of arrays for
+     * @param {number[]|Number.<Array[]>} peaks Can also be an array of arrays for
      * split channel rendering
      * @param {number} channelIndex The index of the current channel. Normally
      * should be 0
@@ -1475,6 +1479,7 @@ function (_Drawer) {
      * @param {number?} end The x-offset of the end of the area that should be
      * rendered
      * @param {function} fn The render function to call, e.g. `drawWave`
+     * @returns {void}
      */
 
   }, {
@@ -1647,7 +1652,7 @@ function (_WebAudio) {
   /**
    * Construct the backend
    *
-   * @param {WavesurferParams} params
+   * @param {WavesurferParams} params Wavesurfer parameters
    */
   function MediaElement(params) {
     var _this;
@@ -1685,6 +1690,9 @@ function (_WebAudio) {
     /** @private */
 
     _this.volume = 1;
+    /** @private */
+
+    _this.isMuted = false;
     /** @private */
 
     _this.buffer = null;
@@ -1739,7 +1747,7 @@ function (_WebAudio) {
      *
      * @param {string} url Path to media file
      * @param {HTMLElement} container HTML element
-     * @param {number[]|number[][]} peaks Array of peak data
+     * @param {number[]|Number.<Array[]>} peaks Array of peak data
      * @param {string} preload HTML 5 preload attribute value
      */
 
@@ -1766,7 +1774,7 @@ function (_WebAudio) {
      * Load existing media element.
      *
      * @param {HTMLMediaElement} elt HTML5 Audio or Video element
-     * @param {number[]|number[][]} peaks Array of peak data
+     * @param {number[]|Number.<Array[]>} peaks Array of peak data
      */
 
   }, {
@@ -1778,11 +1786,11 @@ function (_WebAudio) {
       this._load(elt, peaks);
     }
     /**
-     * Private method called by both load (from url)
-     * and loadElt (existing media element).
+     * Private method called by both `load` (from url)
+     * and `loadElt` (existing media element) methods.
      *
      * @param {HTMLMediaElement} media HTML5 Audio or Video element
-     * @param {number[]|number[][]} peaks Array of peak data
+     * @param {number[]|Number.<Array[]>} peaks Array of peak data
      * @private
      */
 
@@ -1808,7 +1816,7 @@ function (_WebAudio) {
       });
       media.addEventListener('ended', function () {
         _this3.fireEvent('finish');
-      }); // Listen to and relay play, pause and seeking events to enable
+      }); // Listen to and relay play, pause and seeked events to enable
       // playback control from the external media element
 
       media.addEventListener('play', function () {
@@ -1817,17 +1825,32 @@ function (_WebAudio) {
       media.addEventListener('pause', function () {
         _this3.fireEvent('pause');
       });
+      media.addEventListener('seeked', function (event) {
+        _this3.fireEvent('seek');
+      });
+      media.addEventListener('volumechange', function (event) {
+        _this3.isMuted = media.muted;
+
+        if (_this3.isMuted) {
+          _this3.volume = 0;
+        } else {
+          _this3.volume = media.volume;
+        }
+
+        _this3.fireEvent('volume');
+      });
       this.media = media;
       this.peaks = peaks;
       this.onPlayEnd = null;
       this.buffer = null;
+      this.isMuted = media.muted;
       this.setPlaybackRate(this.playbackRate);
       this.setVolume(this.volume);
     }
     /**
      * Used by `wavesurfer.isPlaying()` and `wavesurfer.playPause()`
      *
-     * @return {boolean}
+     * @return {boolean} Media paused or not
      */
 
   }, {
@@ -1838,7 +1861,7 @@ function (_WebAudio) {
     /**
      * Used by `wavesurfer.getDuration()`
      *
-     * @return {number}
+     * @return {number} Duration
      */
 
   }, {
@@ -1861,7 +1884,7 @@ function (_WebAudio) {
      * Returns the current time in seconds relative to the audio-clip's
      * duration.
      *
-     * @return {number}
+     * @return {number} Current time
      */
 
   }, {
@@ -1872,7 +1895,7 @@ function (_WebAudio) {
     /**
      * Get the position from 0 to 1
      *
-     * @return {number}
+     * @return {number} Current position
      */
 
   }, {
@@ -1883,7 +1906,7 @@ function (_WebAudio) {
     /**
      * Get the audio source playback rate.
      *
-     * @return {number}
+     * @return {number} Playback rate
      */
 
   }, {
@@ -1894,7 +1917,7 @@ function (_WebAudio) {
     /**
      * Set the audio source playback rate.
      *
-     * @param {number} value
+     * @param {number} value Playback rate
      */
 
   }, {
@@ -1925,7 +1948,7 @@ function (_WebAudio) {
      * of a clip.
      * @param {number} end When to stop, relative to the beginning of a clip.
      * @emits MediaElement#play
-     * @return {Promise}
+     * @return {Promise} Result
      */
 
   }, {
@@ -1940,7 +1963,7 @@ function (_WebAudio) {
      * Pauses the loaded audio.
      *
      * @emits MediaElement#pause
-     * @return {Promise}
+     * @return {Promise} Result
      */
 
   }, {
@@ -1955,7 +1978,12 @@ function (_WebAudio) {
       this.clearPlayEnd();
       return promise;
     }
-    /** @private */
+    /**
+     * Set the play end
+     *
+     * @private
+     * @param {number} end Where to end
+     */
 
   }, {
     key: "setPlayEnd",
@@ -1989,7 +2017,7 @@ function (_WebAudio) {
      * @param {number} length How many subranges to break the waveform into.
      * @param {number} first First sample in the required range.
      * @param {number} last Last sample in the required range.
-     * @return {number[]|number[][]} Array of 2*<length> peaks or array of
+     * @return {number[]|Number.<Array[]>} Array of 2*<length> peaks or array of
      * arrays of peaks consisting of (max, min) values for each subrange.
      */
 
@@ -2006,6 +2034,8 @@ function (_WebAudio) {
      * Set the sink id for the media player
      *
      * @param {string} deviceId String value representing audio device id.
+     * @returns {Promise} A Promise that resolves to `undefined` when there
+     * are no errors.
      */
 
   }, {
@@ -2030,7 +2060,7 @@ function (_WebAudio) {
   }, {
     key: "getVolume",
     value: function getVolume() {
-      return this.volume || this.media.volume;
+      return this.volume;
     }
     /**
      * Set the audio volume
@@ -2041,8 +2071,11 @@ function (_WebAudio) {
   }, {
     key: "setVolume",
     value: function setVolume(value) {
-      this.volume = value;
-      this.media.volume = this.volume;
+      this.volume = value; // no need to change when it's already at that volume
+
+      if (this.media.volume !== this.volume) {
+        this.media.volume = this.volume;
+      }
     }
     /**
      * This is called when wavesurfer is destroyed
@@ -2137,7 +2170,7 @@ function () {
      * @param {number} length The length of the range
      * @param {number} start The x offset of the start of the range
      * @param {number} end The x offset of the end of the range
-     * @return {number[][]}
+     * @return {Number.<Array[]>} Array with arrays of numbers
      */
 
   }, {
@@ -2212,7 +2245,7 @@ function () {
     /**
      * For testing
      *
-     * @return {number[][]}
+     * @return {Number.<Array[]>} Array with arrays of numbers
      */
 
   }, {
@@ -2257,11 +2290,45 @@ var _observer = _interopRequireDefault(__webpack_require__(/*! ./observer */ "./
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Perform an ajax request
+ * Perform an ajax request using `XMLHttpRequest`.
  *
- * @param {Options} options Description
+ * @deprecated Use `util.fetchFile` instead.
  *
- * @returns {Object} Observer instance
+ * @param {Object} options AJAX options to use. See example below for options.
+ * @returns {Observer} Observer instance
+ * @example
+ * // default options
+ * let options = {
+ *     method: 'GET',
+ *     url: undefined,
+ *     responseType: 'json',
+ *     xhr: {}
+ * };
+ *
+ * // override default options
+ * options.url = '../media/demo.wav';
+ * options.responseType = 'arraybuffer';
+ * options.xhr = {
+ *     requestHeaders: [
+ *         {
+ *             key: 'Authorization',
+ *             value: 'my-token'
+ *         }
+ *     ],
+ *     withCredentials: true
+ * };
+ *
+ * // make ajax call
+ * let ajaxCall = util.ajax(options);
+ * ajaxCall.on('progress', e => {
+ *     console.log('progress', e);
+ * });
+ * ajaxCall.on('success', (data, e) => {
+ *     console.log('success!', data);
+ * });
+ * ajaxCall.on('error', e => {
+ *     console.warn('ajax error: ' + e.target.statusText);
+ * });
  */
 function ajax(options) {
   var instance = new _observer.default();
@@ -2356,6 +2423,259 @@ module.exports = exports.default;
 
 /***/ }),
 
+/***/ "./src/util/fetch.js":
+/*!***************************!*\
+  !*** ./src/util/fetch.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = fetchFile;
+
+var _observer = _interopRequireDefault(__webpack_require__(/*! ./observer */ "./src/util/observer.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var ProgressHandler =
+/*#__PURE__*/
+function () {
+  /**
+   * Instantiate ProgressHandler
+   *
+   * @param {Observer} instance The `fetchFile` observer instance.
+   * @param {Number} contentLength Content length.
+   * @param {Response} response Response object.
+   */
+  function ProgressHandler(instance, contentLength, response) {
+    _classCallCheck(this, ProgressHandler);
+
+    this.instance = instance;
+    this.instance._reader = response.body.getReader();
+    this.total = parseInt(contentLength, 10);
+    this.loaded = 0;
+  }
+  /**
+   * A method that is called once, immediately after the `ReadableStream``
+   * is constructed.
+   *
+   * @param {ReadableStreamDefaultController} controller Controller instance
+   *     used to control the stream.
+   */
+
+
+  _createClass(ProgressHandler, [{
+    key: "start",
+    value: function start(controller) {
+      var _this = this;
+
+      var read = function read() {
+        // instance._reader.read() returns a promise that resolves
+        // when a value has been received
+        _this.instance._reader.read().then(function (_ref) {
+          var done = _ref.done,
+              value = _ref.value;
+
+          // result objects contain two properties:
+          // done  - true if the stream has already given you all its data.
+          // value - some data. Always undefined when done is true.
+          if (done) {
+            // ensure onProgress called when content-length=0
+            if (_this.total === 0) {
+              _this.instance.onProgress.call(_this.instance, {
+                loaded: _this.loaded,
+                total: _this.total,
+                lengthComputable: false
+              });
+            } // no more data needs to be consumed, close the stream
+
+
+            controller.close();
+            return;
+          }
+
+          _this.loaded += value.byteLength;
+
+          _this.instance.onProgress.call(_this.instance, {
+            loaded: _this.loaded,
+            total: _this.total,
+            lengthComputable: !(_this.total === 0)
+          }); // enqueue the next data chunk into our target stream
+
+
+          controller.enqueue(value);
+          read();
+        }).catch(function (error) {
+          controller.error(error);
+        });
+      };
+
+      read();
+    }
+  }]);
+
+  return ProgressHandler;
+}();
+/**
+ * Load a file using `fetch`.
+ *
+ * @param {object} options Request options to use. See example below.
+ * @returns {Observer} Observer instance
+ * @example
+ * // default options
+ * let options = {
+ *     url: undefined,
+ *     method: 'GET',
+ *     mode: 'cors',
+ *     credentials: 'same-origin',
+ *     cache: 'default',
+ *     responseType: 'json',
+ *     requestHeaders: [],
+ *     redirect: 'follow',
+ *     referrer: 'client'
+ * };
+ *
+ * // override some options
+ * options.url = '../media/demo.wav';
+
+ * // available types: 'arraybuffer', 'blob', 'json' or 'text'
+ * options.responseType = 'arraybuffer';
+ *
+ * // make fetch call
+ * let request = util.fetchFile(options);
+ *
+ * // listen for events
+ * request.on('progress', e => {
+ *     console.log('progress', e);
+ * });
+ *
+ * request.on('success', data => {
+ *     console.log('success!', data);
+ * });
+ *
+ * request.on('error', e => {
+ *     console.warn('fetchFile error: ', e);
+ * });
+ */
+
+
+function fetchFile(options) {
+  if (!options) {
+    throw new Error('fetch options missing');
+  } else if (!options.url) {
+    throw new Error('fetch url missing');
+  }
+
+  var instance = new _observer.default();
+  var fetchHeaders = new Headers();
+  var fetchRequest = new Request(options.url); // add ability to abort
+
+  instance.controller = new AbortController(); // check if headers have to be added
+
+  if (options && options.requestHeaders) {
+    // add custom request headers
+    options.requestHeaders.forEach(function (header) {
+      fetchHeaders.append(header.key, header.value);
+    });
+  } // parse fetch options
+
+
+  var responseType = options.responseType || 'json';
+  var fetchOptions = {
+    method: options.method || 'GET',
+    headers: fetchHeaders,
+    mode: options.mode || 'cors',
+    credentials: options.credentials || 'same-origin',
+    cache: options.cache || 'default',
+    redirect: options.redirect || 'follow',
+    referrer: options.referrer || 'client',
+    signal: instance.controller.signal
+  };
+  fetch(fetchRequest, fetchOptions).then(function (response) {
+    // store response reference
+    instance.response = response;
+    var progressAvailable = true;
+
+    if (!response.body) {
+      // ReadableStream is not yet supported in this browser
+      // see https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
+      progressAvailable = false;
+    } // Server must send CORS header "Access-Control-Expose-Headers: content-length"
+
+
+    var contentLength = response.headers.get('content-length');
+
+    if (contentLength === null) {
+      // Content-Length server response header missing.
+      // Don't evaluate download progress if we can't compare against a total size
+      // see https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#Access-Control-Expose-Headers
+      progressAvailable = false;
+    }
+
+    if (!progressAvailable) {
+      // not able to check download progress so skip it
+      return response;
+    } // fire progress event when during load
+
+
+    instance.onProgress = function (e) {
+      instance.fireEvent('progress', e);
+    };
+
+    return new Response(new ReadableStream(new ProgressHandler(instance, contentLength, response)), fetchOptions);
+  }).then(function (response) {
+    var errMsg;
+
+    if (response.ok) {
+      switch (responseType) {
+        case 'arraybuffer':
+          return response.arrayBuffer();
+
+        case 'json':
+          return response.json();
+
+        case 'blob':
+          return response.blob();
+
+        case 'text':
+          return response.text();
+
+        default:
+          errMsg = 'Unknown responseType: ' + responseType;
+          break;
+      }
+    }
+
+    if (!errMsg) {
+      errMsg = 'HTTP error status: ' + response.status;
+    }
+
+    throw new Error(errMsg);
+  }).then(function (response) {
+    instance.fireEvent('success', response);
+  }).catch(function (error) {
+    instance.fireEvent('error', error);
+  }); // return the fetch request
+
+  instance.fetchRequest = fetchRequest;
+  return instance;
+}
+
+module.exports = exports.default;
+
+/***/ }),
+
 /***/ "./src/util/frame.js":
 /*!***************************!*\
   !*** ./src/util/frame.js ***!
@@ -2417,7 +2737,7 @@ exports.default = getId;
 /**
  * Get a random prefixed ID
  *
- * @param (string) prefix Prefix to use. Default is `'wavesurfer_'`.
+ * @param {String} prefix Prefix to use. Default is `'wavesurfer_'`.
  * @returns {String} Random prefixed ID
  * @example
  * console.log(getId()); // logs 'wavesurfer_b5pors4ru6g'
@@ -2516,6 +2836,12 @@ Object.defineProperty(exports, "preventClick", {
     return _preventClick.default;
   }
 });
+Object.defineProperty(exports, "fetchFile", {
+  enumerable: true,
+  get: function get() {
+    return _fetch.default;
+  }
+});
 
 var _ajax = _interopRequireDefault(__webpack_require__(/*! ./ajax */ "./src/util/ajax.js"));
 
@@ -2538,6 +2864,8 @@ var _frame = _interopRequireDefault(__webpack_require__(/*! ./frame */ "./src/ut
 var _debounce = _interopRequireDefault(__webpack_require__(/*! debounce */ "./node_modules/debounce/index.js"));
 
 var _preventClick = _interopRequireDefault(__webpack_require__(/*! ./prevent-click */ "./src/util/prevent-click.js"));
+
+var _fetch = _interopRequireDefault(__webpack_require__(/*! ./fetch */ "./src/util/fetch.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2563,6 +2891,7 @@ exports.default = max;
  *
  * @param   {Array} values Array of numbers
  * @returns {Number} Largest number found
+ * @example console.log(max([1, 2, 3])); // logs 3
  */
 function max(values) {
   var largest = -Infinity;
@@ -2597,7 +2926,7 @@ exports.default = min;
  * Get the smallest value
  *
  * @param   {Array} values Array of numbers
- * @returns {Number}       Smallest number found
+ * @returns {Number} Smallest number found
  * @example console.log(min([1, 2, 3])); // logs 1
  */
 function min(values) {
@@ -2666,7 +2995,7 @@ function () {
    *
    * @param {string} event Name of the event to listen to
    * @param {function} fn The callback to trigger when the event is fired
-   * @return {ListenerDescriptor}
+   * @return {ListenerDescriptor} The event descriptor
    */
 
 
@@ -2740,7 +3069,7 @@ function () {
      *
      * @param {string} event The event to listen to
      * @param {function} handler The callback that is only to be called once
-     * @return {ListenerDescriptor}
+     * @return {ListenerDescriptor} The event descriptor
      */
 
   }, {
@@ -2812,10 +3141,22 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = preventClick;
 
-function preventClickHandler(e) {
-  e.stopPropagation();
+/**
+ * Stops propagation of click event and removes event listener
+ *
+ * @private
+ * @param {object} event The click event
+ */
+function preventClickHandler(event) {
+  event.stopPropagation();
   document.body.removeEventListener('click', preventClickHandler, true);
 }
+/**
+ * Starts listening for click event and prevent propagation
+ *
+ * @param {object} values Values
+ */
+
 
 function preventClick(values) {
   document.body.addEventListener('click', preventClickHandler, true);
@@ -2840,11 +3181,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+/* eslint-disable valid-jsdoc */
+
 /**
- * Returns the requestAnimationFrame function for the browser, or a shim with
- * setTimeout if none is found
+ * Returns the `requestAnimationFrame` function for the browser, or a shim with
+ * `setTimeout` if the function is not found
  *
- * @return {function}
+ * @return {function} Available `requestAnimationFrame` function for the browser
  */
 var _default = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback, element) {
   return setTimeout(callback, 1000 / 60);
@@ -2971,9 +3314,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
  * unsupported browsers.
  * @property {string} backgroundColor=null Change background color of the
  * waveform container.
- * @property {number} barHeight=1 The height of the wave
+ * @property {number} barHeight=1 The height of the wave bars.
  * @property {number} barGap=null The optional spacing between bars of the wave,
  * if not provided will be calculated in legacy format.
+ * @property {number} barWidth=null Draw the waveform using bars.
  * @property {boolean} closeAudioContext=false Close and nullify all audio
  * contexts when the destroy method is called.
  * @property {!string|HTMLElement} container CSS selector or HTML element where
@@ -3038,7 +3382,21 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
  * the channels of the audio
  * @property {string} waveColor='#999' The fill color of the waveform after the
  * cursor.
- * @property {object} xhr={} XHR options.
+ * @property {object} xhr={} XHR options. For example:
+ * `let xhr = {
+ *     cache: 'default',
+ *     mode: 'cors',
+ *     method: 'GET',
+ *     credentials: 'same-origin',
+ *     redirect: 'follow',
+ *     referrer: 'client',
+ *     headers: [
+ *         {
+ *             key: 'Authorization',
+ *             value: 'my-token'
+ *         }
+ *     ]
+ * };`
  */
 
 /**
@@ -3078,8 +3436,9 @@ function () {
      * This function must be used to create a plugin definition which can be
      * used by wavesurfer to correctly instantiate the plugin.
      *
-     * @param  {Object} params={} The plugin params (specific to the plugin)
-     * @return {PluginDefinition} an object representing the plugin
+     * It returns a `PluginDefinition` object representing the plugin.
+     *
+     * @param {Object} params={} The plugin params (specific to the plugin)
      */
     value: function create(params) {}
     /**
@@ -3157,7 +3516,7 @@ function (_util$Observer) {
     /**
      * Instantiate this class, call its `init` function and returns it
      *
-     * @param {WavesurferParams} params
+     * @param {WavesurferParams} params The wavesurfer parameters
      * @return {Object} WaveSurfer instance
      * @example const wavesurfer = WaveSurfer.create(params);
      */
@@ -3182,7 +3541,7 @@ function (_util$Observer) {
    * @param {WavesurferParams} params Instantiation options for wavesurfer
    * @example
    * const wavesurfer = new WaveSurfer(params);
-   * @returns {this}
+   * @returns {this} Wavesurfer instance
    */
   function WaveSurfer(params) {
     var _this;
@@ -3305,7 +3664,7 @@ function (_util$Observer) {
      * @type {Observer}
      */
 
-    _this.currentAjax = null;
+    _this.currentRequest = null;
     /** @private */
 
     _this.arraybuffer = null;
@@ -3368,7 +3727,7 @@ function (_util$Observer) {
    * @example
    * var wavesurfer = new WaveSurfer(params);
    * wavesurfer.init();
-   * @return {this}
+   * @return {this} The wavesurfer instance
    */
 
 
@@ -3387,7 +3746,7 @@ function (_util$Observer) {
      *
      * @param {PluginDefinition[]} plugins An array of plugin definitions
      * @emits {WaveSurfer#plugins-registered} Called with the array of plugin definitions
-     * @return {this}
+     * @return {this} The wavesurfer instance
      */
 
   }, {
@@ -3428,7 +3787,7 @@ function (_util$Observer) {
      * @param {PluginDefinition} plugin A plugin definition
      * @emits {WaveSurfer#plugin-added} Called with the name of the plugin that was added
      * @example wavesurfer.addPlugin(WaveSurfer.minimap());
-     * @return {this}
+     * @return {this} The wavesurfer instance
      */
 
   }, {
@@ -3477,7 +3836,7 @@ function (_util$Observer) {
      * @param {string} name A plugin name
      * @emits WaveSurfer#plugin-initialised
      * @example wavesurfer.initPlugin('minimap');
-     * @return {this}
+     * @return {this} The wavesurfer instance
      */
 
   }, {
@@ -3503,7 +3862,7 @@ function (_util$Observer) {
      * @param {string} name A plugin name
      * @emits WaveSurfer#plugin-destroyed
      * @example wavesurfer.destroyPlugin('minimap');
-     * @returns {this}
+     * @returns {this} The wavesurfer instance
      */
 
   }, {
@@ -3626,7 +3985,24 @@ function (_util$Observer) {
         _this6.drawer.progress(_this6.backend.getPlayedPercents());
 
         _this6.fireEvent('audioprocess', time);
-      });
+      }); // only needed for MediaElement backend
+
+      if (this.params.backend === 'MediaElement') {
+        this.backend.on('seek', function () {
+          _this6.drawer.progress(_this6.backend.getPlayedPercents());
+        });
+        this.backend.on('volume', function () {
+          var newVolume = _this6.getVolume();
+
+          _this6.fireEvent('volume', newVolume);
+
+          if (_this6.backend.isMuted !== _this6.isMuted) {
+            _this6.isMuted = _this6.backend.isMuted;
+
+            _this6.fireEvent('mute', _this6.isMuted);
+          }
+        });
+      }
     }
     /**
      * Create the peak cache
@@ -3688,7 +4064,7 @@ function (_util$Observer) {
      * @param {?number} start Position to start at
      * @param {?number} end Position to end at
      * @emits WaveSurfer#interaction
-     * @return {Promise}
+     * @return {Promise} Result of the backend play method
      * @example
      * // play from second 1 to 5
      * wavesurfer.play(1, 5);
@@ -3705,10 +4081,10 @@ function (_util$Observer) {
       return this.backend.play(start, end);
     }
     /**
-     * Stops playback
+     * Stops and pauses playback
      *
      * @example wavesurfer.pause();
-     * @return {Promise}
+     * @return {Promise} Result of the backend pause method
      */
 
   }, {
@@ -3722,7 +4098,7 @@ function (_util$Observer) {
      * Toggle playback
      *
      * @example wavesurfer.playPause();
-     * @return {Promise}
+     * @return {Promise} Result of the backend play or pause method
      */
 
   }, {
@@ -3819,7 +4195,7 @@ function (_util$Observer) {
 
       // return an error if progress is not a number between 0 and 1
       if (typeof progress !== 'number' || !isFinite(progress) || progress < 0 || progress > 1) {
-        return console.error('Error calling wavesurfer.seekTo, parameter must be a number between 0 and 1!');
+        throw new Error('Error calling wavesurfer.seekTo, parameter must be a number between 0 and 1!');
       }
 
       this.fireEvent('interaction', function () {
@@ -3858,9 +4234,12 @@ function (_util$Observer) {
       this.drawer.progress(0);
     }
     /**
-     * Set the playback volume.
+     * Sets the ID of the audio device to use for output and returns a Promise.
      *
-     * @param {string} deviceId String value representing underlying output device
+     * @param {string} deviceId String value representing underlying output
+     * device
+     * @returns {Promise} `Promise` that resolves to `undefined` when there are
+     * no errors detected.
      */
 
   }, {
@@ -3910,7 +4289,7 @@ function (_util$Observer) {
     /**
      * Get the playback rate.
      *
-     * @return {number}
+     * @return {number} The current playback rate.
      */
 
   }, {
@@ -3935,12 +4314,13 @@ function (_util$Observer) {
     /**
      * Enable or disable muted audio
      *
-     * @param {boolean} mute
+     * @param {boolean} mute Specify `true` to mute audio.
      * @emits WaveSurfer#volume
      * @emits WaveSurfer#mute
      * @example
      * // unmute
      * wavesurfer.setMute(false);
+     * console.log(wavesurfer.getMute()) // logs false
      */
 
   }, {
@@ -3973,7 +4353,7 @@ function (_util$Observer) {
      * Get the current mute status.
      *
      * @example const isMuted = wavesurfer.getMute();
-     * @return {boolean}
+     * @return {boolean} Current mute status
      */
 
   }, {
@@ -3986,7 +4366,7 @@ function (_util$Observer) {
      *
      * Filters must be set with setFilters method first
      *
-     * @return {array}
+     * @return {array} List of enabled filters
      */
 
   }, {
@@ -4213,7 +4593,7 @@ function (_util$Observer) {
      * Decode buffer and load
      *
      * @private
-     * @param {ArrayBuffer} arraybuffer
+     * @param {ArrayBuffer} arraybuffer Buffer to process
      */
 
   }, {
@@ -4231,7 +4611,7 @@ function (_util$Observer) {
      * Directly load an externally decoded AudioBuffer
      *
      * @private
-     * @param {AudioBuffer} buffer
+     * @param {AudioBuffer} buffer Buffer to process
      * @emits WaveSurfer#ready
      */
 
@@ -4274,16 +4654,17 @@ function (_util$Observer) {
      *
      * @param {string|HTMLMediaElement} url The url of the audio file or the
      * audio element with the audio
-     * @param {?number[]|number[][]} peaks Wavesurfer does not have to decode
+     * @param {number[]|Number.<Array[]>} peaks Wavesurfer does not have to decode
      * the audio to render the waveform if this is specified
      * @param {?string} preload (Use with backend `MediaElement`)
      * `'none'|'metadata'|'auto'` Preload attribute for the media element
      * @param {?number} duration The duration of the audio. This is used to
      * render the peaks data in the correct size for the audio duration (as
-     * befits the current minPxPerSec and zoom value) without having to decode
+     * befits the current `minPxPerSec` and zoom value) without having to decode
      * the audio.
+     * @returns {void}
      * @example
-     * // using ajax or media element to load (depending on backend)
+     * // uses fetch or media element to load file (depending on backend)
      * wavesurfer.load('http://example.com/demo.wav');
      *
      * // setting preload attribute with media element backend and supplying
@@ -4314,6 +4695,7 @@ function (_util$Observer) {
         });
 
         if (activeReasons.length) {
+          // eslint-disable-next-line no-console
           console.warn('Preload parameter of wavesurfer.load will be ignored because:\n\t- ' + activeReasons.join('\n\t- ')); // stop invalid values from being used
 
           preload = null;
@@ -4332,9 +4714,10 @@ function (_util$Observer) {
      * Loads audio using Web Audio buffer backend.
      *
      * @private
-     * @param {string} url
-     * @param {?number[]|number[][]} peaks
-     * @param {?number} duration
+     * @param {string} url URL of audio file
+     * @param {number[]|Number.<Array[]>} peaks Peaks data
+     * @param {?number} duration Optional duration of audio file
+     * @returns {void}
      */
 
   }, {
@@ -4366,11 +4749,11 @@ function (_util$Observer) {
      * @private
      * @param {string|HTMLMediaElement} urlOrElt Either a path to a media file, or an
      * existing HTML5 Audio/Video Element
-     * @param {number[]|number[][]} peaks Array of peaks. Required to bypass web audio
+     * @param {number[]|Number.<Array[]>} peaks Array of peaks. Required to bypass web audio
      * dependency
      * @param {?boolean} preload Set to true if the preload attribute of the
      * audio element should be enabled
-     * @param {?number} duration
+     * @param {?number} duration Optional duration of audio file
      */
 
   }, {
@@ -4426,8 +4809,8 @@ function (_util$Observer) {
      * Decode an array buffer and pass data to a callback
      *
      * @private
-     * @param {Object} arraybuffer
-     * @param {function} callback
+     * @param {Object} arraybuffer The array buffer to decode
+     * @param {function} callback The function to call on complete
      */
 
   }, {
@@ -4448,10 +4831,11 @@ function (_util$Observer) {
       });
     }
     /**
-     * Load an array buffer by ajax and pass to a callback
+     * Load an array buffer using fetch and pass the result to a callback
      *
-     * @param {string} url
-     * @param {function} callback
+     * @param {string} url The URL of the file object
+     * @param {function} callback The function to call on complete
+     * @returns {util.fetchFile} fetch call
      * @private
      */
 
@@ -4460,29 +4844,29 @@ function (_util$Observer) {
     value: function getArrayBuffer(url, callback) {
       var _this14 = this;
 
-      var ajax = util.ajax({
+      var options = util.extend({
         url: url,
-        responseType: 'arraybuffer',
-        xhr: this.params.xhr
-      });
-      this.currentAjax = ajax;
-      this.tmpEvents.push(ajax.on('progress', function (e) {
+        responseType: 'arraybuffer'
+      }, this.params.xhr);
+      var request = util.fetchFile(options);
+      this.currentRequest = request;
+      this.tmpEvents.push(request.on('progress', function (e) {
         _this14.onProgress(e);
-      }), ajax.on('success', function (data, e) {
+      }), request.on('success', function (data) {
         callback(data);
-        _this14.currentAjax = null;
-      }), ajax.on('error', function (e) {
-        _this14.fireEvent('error', 'XHR error: ' + e.target.statusText);
+        _this14.currentRequest = null;
+      }), request.on('error', function (e) {
+        _this14.fireEvent('error', 'fetch error: ' + e.message);
 
-        _this14.currentAjax = null;
+        _this14.currentRequest = null;
       }));
-      return ajax;
+      return request;
     }
     /**
      * Called while the audio file is loading
      *
      * @private
-     * @param {Event} e
+     * @param {Event} e Progress event
      * @emits WaveSurfer#loading
      */
 
@@ -4508,7 +4892,7 @@ function (_util$Observer) {
      * @param {number} accuracy=10000 (Integer)
      * @param {?boolean} noWindow Set to true to disable opening a new
      * window with the JSON
-     * @param {number} start
+     * @param {number} start Start index
      * @todo Update exportPCM to work with new getPeaks signature
      * @return {string} JSON of peaks
      */
@@ -4569,15 +4953,15 @@ function (_util$Observer) {
       return this.drawer.getImage(format, quality, type);
     }
     /**
-     * Cancel any ajax request currently in progress
+     * Cancel any fetch request currently in progress
      */
 
   }, {
     key: "cancelAjax",
     value: function cancelAjax() {
-      if (this.currentAjax) {
-        this.currentAjax.xhr.abort();
-        this.currentAjax = null;
+      if (this.currentRequest && this.currentRequest.controller) {
+        this.currentRequest.controller.abort();
+        this.currentRequest = null;
       }
     }
     /**
@@ -4689,7 +5073,7 @@ function (_util$Observer) {
 }(util.Observer);
 
 exports.default = WaveSurfer;
-WaveSurfer.VERSION = "2.2.1-patch.5";
+WaveSurfer.VERSION = "3.0.0";
 WaveSurfer.util = util;
 module.exports = exports.default;
 
@@ -4763,7 +5147,7 @@ function (_util$Observer) {
     /**
      * Does the browser support this backend
      *
-     * @return {boolean}
+     * @return {boolean} Whether or not this browser supports this backend
      */
     value: function supportsWebAudio() {
       return !!(window.AudioContext || window.webkitAudioContext);
@@ -4771,7 +5155,7 @@ function (_util$Observer) {
     /**
      * Get the audio context used by this backend or create one
      *
-     * @return {AudioContext}
+     * @return {AudioContext} Existing audio context, or creates a new one
      */
 
   }, {
@@ -4786,8 +5170,9 @@ function (_util$Observer) {
     /**
      * Get the offline audio context used by this backend or create one
      *
-     * @param {number} sampleRate
-     * @return {OfflineAudioContext}
+     * @param {number} sampleRate The sample rate to use
+     * @return {OfflineAudioContext} Existing offline audio context, or creates
+     * a new one
      */
 
   }, {
@@ -4802,7 +5187,7 @@ function (_util$Observer) {
     /**
      * Construct the backend
      *
-     * @param {WavesurferParams} params
+     * @param {WavesurferParams} params Wavesurfer parameters
      */
 
   }]);
@@ -4942,7 +5327,11 @@ function (_util$Observer) {
         this.analyser.connect(this.gainNode);
       }
     }
-    /** @private */
+    /**
+     * @private
+     *
+     * @param {string} state The new state
+     */
 
   }, {
     key: "setState",
@@ -4955,7 +5344,7 @@ function (_util$Observer) {
     /**
      * Unpacked `setFilters()`
      *
-     * @param {...AudioNode} filters
+     * @param {...AudioNode} filters One or more filters to set
      */
 
   }, {
@@ -5069,6 +5458,8 @@ function (_util$Observer) {
      * Set the sink id for the media player
      *
      * @param {string} deviceId String value representing audio device id.
+     * @returns {Promise} A Promise that resolves to `undefined` when there
+     * are no errors.
      */
 
   }, {
@@ -5118,7 +5509,14 @@ function (_util$Observer) {
     value: function getVolume() {
       return this.gainNode.gain.value;
     }
-    /** @private */
+    /**
+     * Decode an array buffer and pass data to a callback
+     *
+     * @private
+     * @param {ArrayBuffer} arraybuffer The array buffer to decode
+     * @param {function} callback The function to call on complete.
+     * @param {function} errback The function to call on error.
+     */
 
   }, {
     key: "decodeArrayBuffer",
@@ -5134,8 +5532,8 @@ function (_util$Observer) {
     /**
      * Set pre-decoded peaks
      *
-     * @param {number[]|number[][]} peaks
-     * @param {?number} duration
+     * @param {number[]|Number.<Array[]>} peaks Peaks data
+     * @param {?number} duration Explicit duration
      */
 
   }, {
@@ -5148,9 +5546,9 @@ function (_util$Observer) {
       this.peaks = peaks;
     }
     /**
-     * Set the rendered length (different from the length of the audio).
+     * Set the rendered length (different from the length of the audio)
      *
-     * @param {number} length
+     * @param {number} length The rendered length
      */
 
   }, {
@@ -5183,7 +5581,7 @@ function (_util$Observer) {
      * @param {number} length How many subranges to break the waveform into.
      * @param {number} first First sample in the required range.
      * @param {number} last Last sample in the required range.
-     * @return {number[]|number[][]} Array of 2*<length> peaks or array of arrays of
+     * @return {number[]|Number.<Array[]>} Array of 2*<length> peaks or array of arrays of
      * peaks consisting of (max, min) values for each subrange.
      */
 
@@ -5266,7 +5664,7 @@ function (_util$Observer) {
     /**
      * Get the position from 0 to 1
      *
-     * @return {number}
+     * @return {number} Position
      */
 
   }, {
@@ -5325,7 +5723,7 @@ function (_util$Observer) {
     /**
      * Loaded a decoded audio buffer
      *
-     * @param {Object} buffer
+     * @param {Object} buffer Decoded audio buffer to load
      */
 
   }, {
@@ -5353,7 +5751,7 @@ function (_util$Observer) {
     /**
      * Used by `wavesurfer.isPlaying()` and `wavesurfer.playPause()`
      *
-     * @return {boolean}
+     * @return {boolean} Whether or not this backend is currently paused
      */
 
   }, {
@@ -5364,7 +5762,7 @@ function (_util$Observer) {
     /**
      * Used by `wavesurfer.getDuration()`
      *
-     * @return {number}
+     * @return {number} Duration of loaded buffer
      */
 
   }, {
@@ -5385,7 +5783,8 @@ function (_util$Observer) {
      *
      * @param {number} start Position to start at in seconds
      * @param {number} end Position to end at in seconds
-     * @return {{start: number, end: number}}
+     * @return {{start: number, end: number}} Object containing start and end
+     * positions
      */
 
   }, {
@@ -5424,7 +5823,7 @@ function (_util$Observer) {
     /**
      * Get the playback position in seconds
      *
-     * @return {number}
+     * @return {number} The playback position in seconds
      */
 
   }, {
@@ -5479,7 +5878,7 @@ function (_util$Observer) {
      * Returns the current time in seconds relative to the audio-clip's
      * duration.
      *
-     * @return {number}
+     * @return {number} The current time in seconds
      */
 
   }, {
@@ -5490,7 +5889,7 @@ function (_util$Observer) {
     /**
      * Returns the current playback rate. (0=no playback, 1=normal playback)
      *
-     * @return {number}
+     * @return {number} The current playback rate
      */
 
   }, {
@@ -5501,7 +5900,7 @@ function (_util$Observer) {
     /**
      * Set the audio source playback rate.
      *
-     * @param {number} value
+     * @param {number} value The playback rate to use
      */
 
   }, {
