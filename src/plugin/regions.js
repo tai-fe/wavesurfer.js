@@ -233,8 +233,8 @@ class Region {
             if (
                 !this.firedOut &&
                 this.firedIn &&
-                (this.start >= Math.round(time * 100) / 100 ||
-                    this.end <= Math.round(time * 100) / 100)
+                (this.start >= Math.ceil(time * 100) / 100 ||
+                    this.end <= Math.floor(time * 100) / 100)
             ) {
                 this.firedOut = true;
                 this.firedIn = false;
