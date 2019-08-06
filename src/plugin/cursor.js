@@ -60,12 +60,7 @@ export default class CursorPlugin {
             name: 'cursor',
             deferInit: params && params.deferInit ? params.deferInit : false,
             params: params,
-            staticProps: {
-                enableCursor() {
-                    console.warn('Deprecated enableCursor!');
-                    this.initPlugins('cursor');
-                }
-            },
+            staticProps: {},
             instance: CursorPlugin
         };
     }
@@ -87,7 +82,10 @@ export default class CursorPlugin {
         formatTimeCallback: null
     };
 
-    /** @private */
+    /**
+     * @private
+     * @param {object} e Mouse move event
+     */
     _onMousemove = e => {
         const bbox = this.wavesurfer.container.getBoundingClientRect();
         let y = 0;
@@ -100,17 +98,25 @@ export default class CursorPlugin {
 
         this.updateCursorPosition(x, y);
     };
-    /** @private */
+
+    /**
+     * @private
+     * @returns {void}
+     */
     _onMouseenter = () => this.showCursor();
-    /** @private */
+
+    /**
+     * @private
+     * @returns {void}
+     */
     _onMouseleave = () => this.hideCursor();
 
     /**
-     * Construct the plugin class. You probably want to use CursorPlugin.create
+     * Construct the plugin class. You probably want to use `CursorPlugin.create`
      * instead.
      *
-     * @param {CursorPluginParams} params
-     * @param {object} ws
+     * @param {CursorPluginParams} params Plugin parameters
+     * @param {object} ws Wavesurfer instance
      */
     constructor(params, ws) {
         /** @private */
@@ -126,7 +132,7 @@ export default class CursorPlugin {
         /**
          * displays the time next to the cursor
          *
-         * @type {Boolean}
+         * @type {?HTMLElement}
          */
         this.showTime = null;
         /**
@@ -204,6 +210,8 @@ export default class CursorPlugin {
 
         this.wrapper.addEventListener('mousemove', this._onMousemove);
         if (this.params.hideOnBlur) {
+            // ensure elements are hidden initially
+            this.hideCursor();
             this.wrapper.addEventListener('mouseenter', this._onMouseenter);
             this.wrapper.addEventListener('mouseleave', this._onMouseleave);
         }
@@ -287,6 +295,7 @@ export default class CursorPlugin {
      * Format the timestamp for `cursorTime`.
      *
      * @param {number} cursorTime Time in seconds
+     * @returns {string} Formatted timestamp
      */
     formatTime(cursorTime) {
         cursorTime = isNaN(cursorTime) ? 0 : cursorTime;
@@ -298,7 +307,7 @@ export default class CursorPlugin {
             [
                 Math.floor((time % 3600) / 60), // minutes
                 ('00' + Math.floor(time % 60)).slice(-2), // seconds
-                ('000' + Math.floor((time % 1) * 1000)).slice(-3) // miliseconds
+                ('000' + Math.floor((time % 1) * 1000)).slice(-3) // milliseconds
             ].join(':')
         );
     }

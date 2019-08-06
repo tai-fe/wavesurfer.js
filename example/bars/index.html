@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>wavesurfer.js | Cursor Example</title>
+    <title>wavesurfer.js | Waveform using bars</title>
 
     <link href="data:image/gif;" rel="icon" type="image/x-icon" />
 
@@ -16,7 +16,6 @@
 
     <!-- wavesurfer.js -->
     <script src="../../dist/wavesurfer.js"></script>
-    <script src="../../dist/plugin/wavesurfer.cursor.js"></script>
 
     <!-- Demo -->
     <script src="main.js"></script>
@@ -34,7 +33,7 @@
                 <li><a href="/"><i class="glyphicon glyphicon-home"></i></a></li>
             </ul>
 
-            <h1 itemprop="name">Cursor Plugin Example</h1>
+            <h1 itemprop="name">Bars Example</h1>
         </div>
 
         <div id="demo">
@@ -57,25 +56,16 @@
         </div>
 
         <div class="row marketing">
-            <h3>Cursor plugin</h3>
+            <h3>Bars example</h3>
             <hr />
-            <p>Shows a cursor on the waveform.</p>
+            <p>Draws a waveform with bars.</p>
 
             <p>
                 <pre><code>var wavesurfer = WaveSurfer.create({
     container: document.querySelector('#waveform'),
-    plugins: [
-        WaveSurfer.cursor.create({
-            showTime: true,
-            opacity: 1,
-            customShowTimeStyle: {
-                'background-color': '#000',
-                color: '#fff',
-                padding: '2px',
-                'font-size': '10px'
-            }
-        })
-    ]
+    barWidth: 2,
+    barHeight: 1, // the height of the wave
+    barGap: null // the optional spacing between bars of the wave, if not provided will be calculated in legacy format
 });
 </code></pre>
             </p>

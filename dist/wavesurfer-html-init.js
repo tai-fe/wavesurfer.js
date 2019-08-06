@@ -1,5 +1,5 @@
 /*!
- * @tai-fe/wavesurfer.js 2.2.1-patch.6 (2019-08-01)
+ * wavesurfer.js 3.0.0 (2019-08-01)
  * https://github.com/tai-fe/wavesurfer.js
  * @license BSD-3-Clause
  */
@@ -213,7 +213,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
  * @property {string}
  * pluginCdnTemplate='//localhost:8080/dist/plugin/wavesurfer.[name].js' URL
  * template for the dynamic loading of plugins
- * @property {function} loadPlugin If set overwrites the default ajax function,
+ * @property {function} loadPlugin If set overwrites the default request function,
  * can be used to inject plugins differently.
  */
 
@@ -306,6 +306,7 @@ function () {
           async: false
         }, function (err, plugin) {
           if (err) {
+            // eslint-disable-next-line no-console
             return console.error("WaveSurfer plugin ".concat(name, " not found at ").concat(src));
           }
 

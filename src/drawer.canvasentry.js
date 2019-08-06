@@ -84,8 +84,8 @@ export default class CanvasEntry {
     /**
      * Update the dimensions
      *
-     * @param {number} elementWidth
-     * @param {number} totalWidth
+     * @param {number} elementWidth Width of the entry
+     * @param {number} totalWidth Total width of the multi canvas renderer
      * @param {number} width The new width of the element
      * @param {number} height The new height of the element
      */
@@ -155,10 +155,10 @@ export default class CanvasEntry {
      * @param {number} height Height of the rectangle
      */
     fillRects(x, y, width, height) {
-        this.fillRectToContext(this.waveCtx);
+        this.fillRectToContext(this.waveCtx, x, y, width, height);
 
         if (this.hasProgressCanvas) {
-            this.fillRectToContext(this.progressCtx);
+            this.fillRectToContext(this.progressCtx, x, y, width, height);
         }
     }
 
